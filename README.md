@@ -14,7 +14,7 @@ sudo apt install nodejs
 Installing npm
 
 ```
-sudo apt install npm
+sudo apt install -g npm
 ```
 
 clone the app
