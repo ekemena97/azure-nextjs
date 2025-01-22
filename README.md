@@ -33,7 +33,7 @@ npm install -g pm2
 Build nextjs
 ```
 npm run build
-``
+```
 
 Start nextjs
 ```
@@ -55,10 +55,13 @@ pm2 logs nextjs-app
 
 Install Nginx
 ```
+    
 npm install nginx
 ```
 
 Nginx Configuration
+
+
 ```
 sudo vi sudo nano /etc/nginx/sites-available/nextjs
 
