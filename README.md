@@ -60,14 +60,14 @@ pm2 logs nextjs-app
 Install Nginx
 ```
     
-npm install nginx
+sudo apt install nginx
 ```
 
 Nginx Configuration
 
 
 ```
-sudo vi sudo nano /etc/nginx/sites-available/nextjs
+sudo vi /etc/nginx/sites-available/nextjs
 
 server {
     listen 80;
@@ -82,8 +82,6 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 }
-
-sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/
 
 ```
 
