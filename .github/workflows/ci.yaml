@@ -25,6 +25,12 @@ jobs:
       - name: Build Next.js App
         run: npm run build
 
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+
       - name: Transfer Build to VPS
         env:
           SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
@@ -32,9 +38,6 @@ jobs:
           VPS_HOST: "54.159.228.215"
           VPS_PATH: "/var/www/nextjs-app"
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
 
           echo -e "Host *\n  StrictHostKeyChecking no\n" > ~/.ssh/config
           ssh -T -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "echo 'SSH login successful!'"
