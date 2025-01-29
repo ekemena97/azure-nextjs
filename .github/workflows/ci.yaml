@@ -51,7 +51,7 @@ jobs:
           VPS_PATH: "/var/www/nextjs-app"
         run: |
           ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "sudo mkdir -p $VPS_PATH"
-          rsync -avz --delete-after .next package.json package-lock.json $VPS_USER@$VPS_HOST:$VPS_PATH/
+          rsync -avz -e "ssh -i ~/.ssh/${{ secrets.VPS_SSH_KEY }} -o StrictHostKeyChecking=no" --delete-after .next package.json package-lock.json $VPS_USER@$VPS_HOST:$VPS_PATH/
 
       - name: Restart App on VPS
         env:
