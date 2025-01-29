@@ -42,9 +42,11 @@ jobs:
           echo -e "Host *\n  StrictHostKeyChecking no\n" > ~/.ssh/config
           ssh -T -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "echo 'SSH login successful!'"
 
-          ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "sudo mkdir -p $VPS_PATH"
-          rsync -avz --delete-after .next package.json package-lock.json $VPS_USER@$VPS_HOST:$VPS_PATH/
-
+          ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST << 'EOF'
+            mkdir -p $VPS_PATH
+            cd $VPS_PATH
+            rsync -avz --delete-after .next package.json package-lock.json .
+          EOF
       - name: Restart App on VPS
         env:
           VPS_USER: "ubuntu"
