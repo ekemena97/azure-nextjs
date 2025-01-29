@@ -38,8 +38,6 @@ jobs:
           VPS_HOST: "54.159.228.215"
           VPS_PATH: "/var/www/nextjs-app"
         run: |
-
-          echo -e "Host *\n  StrictHostKeyChecking no\n" > ~/.ssh/config
           ssh -T -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "echo 'SSH login successful!'"
 
           ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST << 'EOF'
