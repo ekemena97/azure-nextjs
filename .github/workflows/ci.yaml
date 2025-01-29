@@ -35,6 +35,12 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
+
+          echo -e "Host *\n  StrictHostKeyChecking no\n" > ~/.ssh/config
+          ssh -T -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "echo 'SSH login successful!'"
+
+
+
           ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "mkdir -p $VPS_PATH"
           rsync -avz --delete-after .next package.json package-lock.json $VPS_USER@$VPS_HOST:$VPS_PATH/
 
