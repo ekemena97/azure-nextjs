@@ -1,14 +1,23 @@
+<<<<<<< HEAD
 name: Deploy Nextjs app on azure vm
+=======
+name: Deploy Next.js to EC2
+>>>>>>> 3f887904f6067fe9568a96e789dc153b8e76be05
 
 on:
   push:
     branches:
+<<<<<<< HEAD
       - main
+=======
+      - main  # Trigger the workflow on pushes to the main branch
+>>>>>>> 3f887904f6067fe9568a96e789dc153b8e76be05
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
       HOST: "20.106.201.242"
       USERNAME: "azureuser"
       
@@ -36,3 +45,41 @@ jobs:
             npm run build
             pm2 restart npm --name "nextjs-app" -- run start
           EOF 
+=======
+      VPS_HOST: "54.159.228.215"
+      USER: ubuntu
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Add EC2 host to known hosts
+        run: |
+          ssh-keyscan -H $VPS_HOST >> ~/.ssh/known_hosts
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Build Next.js app
+        run: |
+          npm run build
+
+      - name: Deploy to EC2
+        run: |
+          # SSH into EC2, pull the latest changes, install dependencies, and start the app
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USER@$VPS_HOST << EOF
+            cd azure-nextjs || exit
+            git pull origin main || exit
+            npm install || exit
+            npm run build || exit
+            pm2 restart nextjs-app || pm2 start npm --name "nextjs-app" -- start
+          EOF
+
+>>>>>>> 3f887904f6067fe9568a96e789dc153b8e76be05
