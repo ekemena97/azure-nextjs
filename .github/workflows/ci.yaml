@@ -51,8 +51,8 @@ jobs:
           VPS_PATH: "/var/www/nextjs-app"
         run: |
           ssh-keygen -R 54.159.228.215
-          ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "sudo mkdir -p /opt/nextjs-app"
-          sudo rsync -avz --delete-after .next package.json package-lock.json ubuntu@54.159.228.215:/opt/nextjs-app/
+          ssh -o StrictHostKeyChecking=no -p $VPS_USER@$VPS_HOST "sudo mkdir -p /var/www/nextjs-app"
+          sudo rsync -avz --delete-after .next package.json package-lock.json $VPS_USER@$VPS_HOST:/var/www/nextjs-app/
 
       - name: Restart App on VPS
         env:
