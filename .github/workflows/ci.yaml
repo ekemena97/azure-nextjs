@@ -66,7 +66,7 @@ jobs:
         run: |
           ssh-keygen -R 54.159.228.215
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $VPS_USER@$VPS_HOST "sudo mkdir -p /var/www/nextjs-app"
-          sudo rsync -avz --delete-after .next package.json package-lock.json $VPS_USER@$VPS_HOST:/var/www/nextjs-app/
+          ls -la
 
       - name: Restart App on VPS
         env:
