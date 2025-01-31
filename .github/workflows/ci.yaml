@@ -1,0 +1,38 @@
+name: Deploy Nextjs app on azure vm
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HOST: "20.106.201.242"
+      USERNAME: "azureuser"
+      
+      
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+
+      - name: Add Azure host to known hosts
+        run: |
+          ssh-keygen -H $HOST >> ~/.ssh/known_hosts
+
+      - name: Deploy Application
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USERNAME@$HOST << EOF
+            cd azure-nextjs
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart npm --name "nextjs-app" -- run start
+          EOF 
