@@ -57,27 +57,39 @@ jobs:
           ssh-keyscan -H $VPS_HOST >> ~/.ssh/known_hosts
 
 
-      - name: Transfer Build to VPS 
+      - name: Deploy to sandbox via rsync
+        uses: trendyminds/github-actions-rsync@master
+        with:
+          RSYNC_OPTIONS: -avzr --delete --exclude node_modules --exclude '.git*'
+          RSYNC_TARGET: /var/www/nextjs-app
+          RSYNC_SOURCE: /
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
-          VPS_USER: "ubuntu"
-          VPS_HOST: "54.159.228.215"
-          VPS_PATH: "/var/www/nextjs-app"
-        run: |
-          ssh-keygen -R 54.159.228.215
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $VPS_USER@$VPS_HOST "sudo mkdir -p /var/www/nextjs-app"
-          ls -la
+          SSH_PRIVATE_KEY: ${{secrets.VPS_SSH_KEY}}
+          SSH_USERNAME: ubuntu
+          SSH_HOSTNAME: 54.159.228.215
 
-      - name: Restart App on VPS
-        env:
-          VPS_USER: "ubuntu"
-          VPS_HOST: "54.159.228.215"
-          VPS_PATH: "/var/www/nextjs-app"
-        run: 
-          ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST << 'EOF'
-            cd $VPS_PATH
-            npm install --omit=dev
-            pm2 stop nextjs-app || true
-            pm2 start "npm start" --name nextjs-app
-            pm2 save 
-          EOF
+
+      # - name: Transfer Build to VPS 
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
+      #     VPS_USER: "ubuntu"
+      #     VPS_HOST: "54.159.228.215"
+      #     VPS_PATH: "/var/www/nextjs-app"
+      #   run: |
+      #     ssh-keygen -R 54.159.228.215
+      #     ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $VPS_USER@$VPS_HOST "sudo mkdir -p /var/www/nextjs-app"
+      #     sudo rsync -avz --delete-after .next package.json package-lock.json $VPS_USER@$VPS_HOST:/var/www/nextjs-app/
+
+      # - name: Restart App on VPS
+      #   env:
+      #     VPS_USER: "ubuntu"
+      #     VPS_HOST: "54.159.228.215"
+      #     VPS_PATH: "/var/www/nextjs-app"
+      #   run: 
+      #     ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST << 'EOF'
+      #       cd $VPS_PATH
+      #       npm install --omit=dev
+      #       pm2 stop nextjs-app || true
+      #       pm2 start "npm start" --name nextjs-app
+      #       pm2 save 
+      #     EOF
