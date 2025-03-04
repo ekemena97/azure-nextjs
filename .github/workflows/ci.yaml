@@ -32,7 +32,7 @@ jobs:
             set -e
             pwd
             if [ ! -d "azure-nextjs" ]; then
-              git clone git@github.com:your-repo/azure-nextjs.git
+              git clone https://github.com/ekemena97/azure-nextjs.git
             fi
             cd azure-nextjs
             ls -la
