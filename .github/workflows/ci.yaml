@@ -8,7 +8,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      HOST: "20.106.201.242"
+      HOST: "20.91.133.55"
       USERNAME: "azureuser"
       
       
