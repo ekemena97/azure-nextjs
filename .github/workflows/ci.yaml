@@ -1,4 +1,4 @@
-name: Deploy Nextjs app on azure vm
+name: Deploy Nextjs app on Azure VM
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
             set -e
             pwd
             if [ ! -d "azure-nextjs" ]; then
-              git clone https://github.com/your-repo/azure-nextjs.git
+              git clone git@github.com:your-repo/azure-nextjs.git
             fi
             cd azure-nextjs
             ls -la
