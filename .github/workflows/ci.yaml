@@ -27,25 +27,27 @@ jobs:
           ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 
       - name: Deploy Application
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USERNAME@$HOST <<EOF
-            # Ensure the project directory exists
-            if [ ! -d "azure-nextjs" ]; then
-              git clone https://github.com/your-repo/azure-nextjs.git
-            fi
-            cd azure-nextjs
+  run: |
+    ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USERNAME@$HOST <<EOF
+      set -e
+      pwd
+      if [ ! -d "azure-nextjs" ]; then
+        git clone https://github.com/your-repo/azure-nextjs.git
+      fi
+      cd azure-nextjs
+      ls -la
 
-            # Ensure Node.js and PM2 are installed
-            if ! command -v node &> /dev/null; then
-              curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-              sudo apt-get install -y nodejs
-            fi
-            if ! command -v pm2 &> /dev/null; then
-              npm install -g pm2
-            fi
+      if ! command -v node &> /dev/null; then
+        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+      fi
 
-            git pull origin main
-            npm install
-            npm run build
-            pm2 restart nextjs-app || pm2 start npm --name "nextjs-app" -- run start
-          EOF
+      if ! command -v pm2 &> /dev/null; then
+        sudo npm install -g pm2
+      fi
+
+      git pull origin main
+      npm install
+      npm run build
+      pm2 restart nextjs-app || pm2 start npm --name "nextjs-app" -- run start
+    EOF
